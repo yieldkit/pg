@@ -1,6 +1,6 @@
 {
   "name": "@yieldkit/pg",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "PostgreSQL for Effect on @effect/sql-pg: a checked, logged pool, TLS, LISTEN/NOTIFY, advisory locks, readiness and SQL migrations.",
   "keywords": [
     "advisory-lock",
