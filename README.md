@@ -14,7 +14,7 @@ The layers provide `@effect/sql-pg`'s `PgClient` and Effect's `SqlClient`, so re
 pnpm add @yieldkit/pg @effect/sql-pg effect
 ```
 
-`effect` and `@effect/sql-pg` 4.1.5 or a later 4.1 patch are peer dependencies, so your code and this package share one copy of each. `pg`, `node-pg-migrate` and [`@yieldkit/logger`](https://github.com/yieldkit/logger) come with the package. It runs on Node.js 22.18+, 24.11+ and 26+, and on Bun, against PostgreSQL 15 to 19. CI runs the integration tests on PostgreSQL 19 and 15.
+`effect` and `@effect/sql-pg` 4.1.6 or a later 4.1 patch are peer dependencies, so your code and this package share one copy of each. `pg`, `node-pg-migrate` and [`@yieldkit/logger`](https://github.com/yieldkit/logger) come with the package. It runs on Node.js 22.18+, 24.11+ and 26+, and on Bun, against PostgreSQL 15 to 19. CI runs the integration tests on PostgreSQL 19 and 15.
 
 | Import                 | Contents                                                                                       |
 | ---------------------- | ---------------------------------------------------------------------------------------------- |
