@@ -39,7 +39,7 @@ export default defineConfig({
     rules: {
       ...oxlintConfig.rules,
       // `SqlClient`, `SqlError` and `@effect/sql-pg` live in Effect's unstable modules; this package
-      // builds on them by design, so its `effect` and `@effect/sql-pg` peer ranges (`~4.1.5`) only
+      // builds on them by design, so its `effect` and `@effect/sql-pg` peer ranges (`~4.1.6`) only
       // admit patch releases of the minor version it is tested against.
       'effecttsgo/unstable-api-usage': 'off',
     },
