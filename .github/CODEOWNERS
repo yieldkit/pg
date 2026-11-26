@@ -1,0 +1,3 @@
+# Every change needs the maintainer's review, including workflows, scripts and the manifests
+# that define what CI runs. The default-branch ruleset requires code owner review.
+* @sandrinodm

@@ -1,0 +1,54 @@
+name: Bug report
+description: A layer, migration, LISTEN/NOTIFY or lock behaves differently from the docs, or a secret reaches a log or error.
+title: 'bug: '
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: '@yieldkit/pg version'
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: effect
+    attributes:
+      label: effect and @effect/sql-pg versions
+      placeholder: 4.1.5, 4.1.5
+    validations:
+      required: true
+  - type: input
+    id: postgres
+    attributes:
+      label: PostgreSQL version and hosting
+      description: For example 18.1 in Docker, or a managed service, and whether a pooler such as PgBouncer sits in between.
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime
+      placeholder: Node.js 24.11.0
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: The smallest program that shows the problem, with its layer setup and options. Use made-up connection strings and passwords.
+      render: ts
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: The error, log lines or query results you got.
+    validations:
+      required: true

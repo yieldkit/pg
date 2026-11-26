@@ -1,0 +1,25 @@
+name: Feature request
+description: Propose a new option, default, export or change in behaviour.
+title: 'feat: '
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What do you need to connect to, migrate, listen for or test, and what gets in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: The API or behaviour you have in mind, with a code sample.
+      render: ts
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: '@effect/sql-pg directly, options of this package or other workarounds you considered.'

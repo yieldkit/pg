@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Cancel superseded PR runs only: every commit on main keeps its CI run, which releases depend on.
+# A push gets a group of its own, since a queued run in a shared group is cancelled by the next one.
+concurrency:
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    name: Check (${{ matrix.os }}, Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            node: '22.18.0'
+          - os: ubuntu-latest
+            node: '24'
+          - os: ubuntu-latest
+            node: '26'
+          - os: macos-latest
+            node: '26'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          version: 12.23.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Format, lint and type checks
+        if: matrix.os == 'ubuntu-latest' && matrix.node == '26'
+        run: pnpm check
+      - run: pnpm test
+      - name: Build and pack the npm package
+        run: pnpm pack --out "$RUNNER_TEMP/pg.tgz"
+      - name: Test the installed package
+        run: pnpm test:package "$RUNNER_TEMP/pg.tgz"
+      - name: Verify checks leave the checkout clean
+        run: |
+          git diff --exit-code
+          test -z "$(git ls-files --others --exclude-standard)"
+
+  bun:
+    name: Package on Bun (ubuntu-latest)
+    # The README says the package runs on Bun; this runs the installed-package smoke test under it.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          version: 12.23.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '26'
+          cache: pnpm
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.5
+      - run: pnpm install --frozen-lockfile
+      - name: Run the unit tests on Bun
+        # Bun crashes in Vitest's default forks pool.
+        run: bun --bun node_modules/vite-plus/bin/vp test run --project unit --pool=threads
+      - name: Build and pack the npm package
+        run: pnpm pack --out "$RUNNER_TEMP/pg.tgz"
+      - name: Test the installed package on Bun
+        run: bun scripts/package-smoke.mjs "$RUNNER_TEMP/pg.tgz"
+
+  integration:
+    name: Integration (PostgreSQL ${{ matrix.postgres }})
+    # Testcontainers needs Docker, which GitHub's Ubuntu runners have and its macOS runners do not.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # The package default and the oldest PostgreSQL release still supported upstream.
+        postgres: ['19.0', '15']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          version: 12.23.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '26'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Run the integration tests against PostgreSQL and PgBouncer in Docker
+        env:
+          PG_TEST_IMAGE: postgres:${{ matrix.postgres }}-trixie
+        run: pnpm test:integration

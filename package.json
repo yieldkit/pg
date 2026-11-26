@@ -1,0 +1,92 @@
+{
+  "name": "@yieldkit/pg",
+  "version": "0.1.0",
+  "description": "PostgreSQL for Effect on @effect/sql-pg: a checked, logged pool, TLS, LISTEN/NOTIFY, advisory locks, readiness and SQL migrations.",
+  "keywords": [
+    "advisory-lock",
+    "effect",
+    "effect-ts",
+    "listen-notify",
+    "migrations",
+    "postgres",
+    "postgresql",
+    "sql"
+  ],
+  "homepage": "https://github.com/yieldkit/pg#readme",
+  "bugs": "https://github.com/yieldkit/pg/issues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yieldkit/pg.git"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "LICENSE",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "check": "effect-tsgo vp check",
+    "lint:fix": "effect-tsgo vp check --fix",
+    "prepack": "vp pack",
+    "prepare": "vp config",
+    "ready": "pnpm check && pnpm test",
+    "test": "vp test --project unit",
+    "test:integration": "vp test --project integration",
+    "test:package": "node scripts/package-smoke.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@yieldkit/logger": "catalog:",
+    "node-pg-migrate": "catalog:",
+    "pg": "catalog:"
+  },
+  "devDependencies": {
+    "@effect/sql-pg": "catalog:",
+    "@effect/tsgo": "catalog:",
+    "@testcontainers/postgresql": "catalog:",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "@yieldkit/oxlint-config": "catalog:",
+    "effect": "catalog:",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "peerDependencies": {
+    "@effect/sql-pg": "~4.1.6",
+    "@testcontainers/postgresql": "^12.2.2",
+    "effect": "~4.1.6"
+  },
+  "peerDependenciesMeta": {
+    "@testcontainers/postgresql": {
+      "optional": true
+    }
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.23.0",
+      "onFail": "download"
+    }
+  },
+  "engines": {
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+  }
+}
