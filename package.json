@@ -1,6 +1,6 @@
 {
   "name": "@yieldkit/pg",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "PostgreSQL for Effect on @effect/sql-pg: a checked, logged pool, TLS, LISTEN/NOTIFY, advisory locks, readiness and SQL migrations.",
   "keywords": [
     "advisory-lock",
@@ -70,9 +70,9 @@
     "vite-plus": "catalog:"
   },
   "peerDependencies": {
-    "@effect/sql-pg": "~4.1.6",
+    "@effect/sql-pg": "~4.1.7",
     "@testcontainers/postgresql": "^12.2.2",
-    "effect": "~4.1.6"
+    "effect": "~4.1.7"
   },
   "peerDependenciesMeta": {
     "@testcontainers/postgresql": {
